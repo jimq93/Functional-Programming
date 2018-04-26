@@ -1,0 +1,74 @@
+===============================================================================
+===============================================================================
+===============================================================================
+NOTES ON HW10
+===============================================================================
+===============================================================================
+Compilation  :
+===============================================================================
+===============================================================================
+1. Add support in the compiler for let and or. You can do this simply by 
+adding procedures let->appl and or->if to syntax.scm and then using these 
+procedures in the dispatch procedure of the compiler:
+
+ let->appl turns a let expression into an application of a lambda expression. 
+
+ or->if turns an or expression into an if expression. Remember that an or can 
+have more than two "arguments".
+===============================================================================
+
+ First things first, initial files such as regsim.scm,syntax.scm, and 
+eceval-support.scm were from hw9.  
+
+Within syntax.scm, I added 'let->appl' and 'or->if' function in order to 
+allow support for let and or in the compiler.
+
+'let?', and 'or?' respectively are added into the 
+syntax.scm to allow the respectively functions to be registered into the 
+compiler to be evaluated by checking for their tagged-lists.
+
+The 'let->appl' function will cons a list containing a helper function 
+let-expr into a lambda expression using the function make-lambda by mapping 
+the first/car of the expression with the next/cdr of the expression, along 
+with the cdr of the cdr of the expression. Of which a let expression is 
+generating as such as a '(let-expr expA expB)' for instance.
+
+The 'or->if' function uses a cond statement to check if the expression isn't 
+empty and proceeds to use make-if to make an if statement out of an or 
+expression by using the car of the expression along with another car of an 
+expression and or the cdr of the expression, thus 'this' or 'that', 
+otherwise the empty defaults to false as an empty expression.
+
+'let?' and 'or?' are also added into the dispatch procedure's cond statement 
+of  'compile' in compiler.scm in order to evaluate let ot or statements.
+
+===============================================================================
+2. Exercise 5.50 (page 564).
+Extend the compiler so you can compile the metacircular evaluator from 
+Chapter 4.
+===============================================================================
+ 
+I added various primitive procdures in 
+eceval-support.scm in the function primitive procedures to accommodate 
+primitives such as 'caar......... cddddr' and various other conditional 
+primitives in the scheme compiler. I also added 'apply?' into the compile 
+function to evaluate apply.
+
+'apply?', and 'map?' respectively are added into the 
+syntax.scm to allow the respectively functions to be registered into the 
+compiler to be evaluated by checking for their tagged-lists.
+
+The function 'compile-apply' allows the extension of 'apply' into the 
+compilation. It is very much based on 'compile-application' function except 
+that the 'compile-apply' evaluates expressions explicitly with an 'apply' 
+tag on it, whereas  'compile-application' evaluates everything else for that 
+matter. The helper 'proc-code' dispatches the the car of the cdr (next 
+expression) procedure expresion into the 'proc register with compile 
+function. The helper 'operand-codes' dispatches the car of the cddr (next 
+expression after) operand of the next expression into the 'argl register 
+with compile function as well. 
+ 
+ TODO: MAP
+
+===============================================================================
+===============================================================================

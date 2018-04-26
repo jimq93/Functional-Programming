@@ -1,0 +1,68 @@
+===============================================================================
+===============================================================================
+NOTES ON convert.scm
+===============================================================================
+The principle behind this procedure is based on the relation in unit 
+conversion. 
+U = (u/v) V
+
+where U and V are two unit lists.
+u and v are multiples of U normalized and V normalized
+together they represent the same unit list U and V as base units.
+The Conversion principle is based on 
+U normalized = V normalized
+
+Let 
+U = u*U-normalized and V = v*V-normalized
+with 
+U-normalized = V-normalized
+substitute with 
+U/u = V/v
+U = u*V/v
+U= (u/v) V
+a U = a(u/v) V
+===============================================================================
+2. why are the quotes necessary?
+===============================================================================
+When calling the conversion procedure, parameters of quanities/quantities 
+are represented by lists in Scheme/Lisp. The Scheme interpreter uses a quote 
+to interpret the constructed lists as oppose to a function/procedure call. 
+==============================================================================
+What was easy? 
+===============================================================================
+	The easy part was implementing the provided code to acess the units.dat. 
+Another easy part was the main algorithm for the procedure convert base 
+using the above principle as a reference (nearly a literal word for word).
+The fact that this assignment provides a base units as reference.
+===============================================================================
+What took some thinking? 
+===============================================================================
+	The parts that really took thinking was actually going about how to 
+flesh out and define the necessary helper functions that would make the 
+main abstract function work. The hardest part was getting the various 
+unit quanities to be equal to each other, which had to be involved with 
+defining units in terms of a base units. Not only that figuring out how 
+to combine like units together at one line together, which is a godsend by 
+having a base units. 
+===============================================================================
+What mistakes did 
+you make, and how did you fix them? 
+===============================================================================
+	The mistakes I often made were syntaxs errors as a result of misplacing 
+my paranthesis especially in nested if statements, I fixed them by 
+carefully looking back for misplaced paranthesis and followed scheme 
+syntax accordingly. 
+
+===============================================================================
+Would you do things differently a second time? And if you had more time, how 
+would you extend this code to make it more useful and/or user-friendly? 
+===============================================================================
+
+	I would try to make my code to be able take into account of more 
+parameters that mean virtually the same similiar to how the search 
+engine of Google does when it comes to computing the value of inputted 
+data in a dynamic fashion (of course though this will not take into 
+account the logistical demand making such program from scratch). I 
+probably wouldn't do it in Scheme but something akin to Matlab since 
+it's much more friendly in terms of scientific computations which is 
+what this assignment seems to be geared towards too.

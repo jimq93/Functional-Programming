@@ -1,0 +1,66 @@
+===============================================================================
+===============================================================================
+NOTES ON HW4
+===============================================================================
+HW4-Part1
+===============================================================================
+1.1 
+
+	Doing exaclty what the question says, this involves replacing certain 
+defien statements in this case 'account' and 'balance' are redefined as 
+lambda statements. The former 'dispatch' procedure is replaced with a 
+'(lambda (m))' Whatever that is a parameter seems to be replacable as a 
+labmda expression. 
+
+1.2
+	The 'withdraw' and 'deposit' procedure from part 1.1 can be redefined 
+with a cond statement that checks for a lambda expression that equates 
+the respective lambda expression 'm' here as equal to 'withdraw and or 
+'deposit in order to execute the procedure.
+
+1.3
+	The lambda expression 'amount' from part 1.2 is no longer in the cond 
+statement. An 'if' statement will determine whether 'm' is equal to 
+'deposit' or 'withdraw'. The lambda statement 'amount' will be defined 
+outside the now nested cond statement check whether 'm' is equal to 
+'withdraw' in order to withdraw, otherwise it decides to go about 
+depositing the amount to determine a new balance.
+===============================================================================
+2.
+	In 2.1 and 2.2 the illustration of the (define acc )make-account 50) 	
+procedure is being evaluated is based on figure 10 in lecture 7, and 
+from Figures 3.8 and 3.9 in Chapter 3 in the book.
+===============================================================================
+3.
+	'make-monitored' takes 'f' as input. The counter is set as 0 as default. 
+A lambda expression 'mf' is returned from procedure as a result from the 
+a cond statement based on the respective input. 'how-many-calls?' will 
+simply return the counter. 'reset-count' as it's name implies resets the 
+counter to 0. Otherwise the internal counter increments by 1 subsequently.
+===============================================================================
+4.
+	'make-pw-account' is different from the 'make-account' as in the book 
+based on the exactly the question suggested ,is that it uses the 
+procedure 'make-account-inline-factored' from problem 1 despite any of 
+the 3 procedures is fine as a nested black-box procedure rather than 
+having to redefine the procedure from scratch, thus making the overall 
+procedure a 'wrapper' procedure. 'input' is defiend as lambda 
+expressions. 'password' is checked to be equal to 'input' by 'verify', 
+and from which m is checked for the password to be correctly matched, 
+otherwise error is returned as result of the wrong password.
+===============================================================================
+5.
+	The recursive version factorial is drawn in which procedure is evaluated 
+in a recursive manner in which the 'n' values are evaluated 
+subsequently, and n is then redefined being the difference of (n-1).  
+The iterative version of factorial drawn in which the number of times 
+factorial evalute itself until counter is equal to the max-count; The 
+product is subsequently stored are each subsequent evaluations.
+===============================================================================
+HW4-Part2
+
+TO DO
+
+
+===============================================================================
+===============================================================================

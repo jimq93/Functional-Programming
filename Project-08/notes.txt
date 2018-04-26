@@ -1,0 +1,84 @@
+===============================================================================
+===============================================================================
+NOTES ON HW8
+===============================================================================
+===============================================================================
+Modifying the register machine simulator:
+===============================================================================
+(Extra credit) Exercise 5.8 (page 523).
+===============================================================================
+
+Within the function extraction-counter (in conjunction with Exercise 
+5.19), a cond statement is added to check whether same label name is used in 
+the next instruction which is the car of the text and report an error 
+message, otherwise it will default to recieving the next label of 
+instruction in the entry.
+
+===============================================================================
+(Extra credit) Exercise 5.9 (page 529).
+===============================================================================
+
+Within the function make-operation-exp, the lambda expression is modified by 
+including a cond statement to check for whether the expression is a label 
+expression, if so it reports an error. Otherwise it will default as the 
+usual make-elementary-exp as usual.
+
+===============================================================================
+Exercise 5.19 (page 532).
+===============================================================================
+
+Within the function make-new-machine, 'breakpoints' and 'labels' are added 
+as new fields within the machine in representing breakpoints and labels 
+respectively.
+
+In the helper function execute, is modified with a cond statement to check 
+whether there are any instructions in the machine otherwise it finish 
+executing; if so it will check whether the current breakpoint is not empty 
+and proceed to display the breakpoint at a certain point in the machine. 
+Otherwise it will proceed to check whether the program counter is not empty 
+with the helper function proceed-now, and begin to car and cdr to get the 
+contents in the program counter then execute, otherwise it's finished 
+executing. 
+
+filter-breakpoint based on filter serves as a helper function for execute 
+and sorts through the sequence breakpoints to check whether there is a 
+breakpoint right after the instruction.
+
+breakpoint-here serves as a helper function that helps create a breakpoint 
+for respective got functions set-breakpoint and cancel-breakpoint.
+
+Within the cond equal statement of the helper function dispatch, will be 
+modified to check the input message for 'set-breakpoint to set a breakpoint 
+at the respective label, 
+'cancel-breakpoint to remove a breakpoint at the offset point of a label 
+using the helper function breakpoint-remove based on val-remove from 
+homework 2 which uses filter-breakpoint to go through the sequence of 
+instructions to remove the breakpoint,
+'cancel-all-breakpoints which sets the breakpoints to null to clear all 
+breakpoints,
+'proceed-machine which uses the helper function proceed-now to execute going 
+through getting contents from the program counter, and 'save-labels which 
+sets the label within the machine in the function assemble. 
+
+The function extraction-counter serves as a helper function for the function 
+extract-labels in order to implement a breakpoint counter. 
+entry-counter serves as a helper function based off of make-label-entry is 
+modified to accomodate breakpoint counters using a list, likewise 
+instruction-counter is based off of make-instruction to accomodate 
+breakpoint counters usign a list as well.
+extraction-counter is based off the initial extract-labels function but 
+modified to check whether the text is not empty, if so it implement a cond 
+statement to check for a symbol in car of the machine's text for 
+instructions, and return a the current counter, otherwise it proceeds to 
+increment the counter. Much like the initial extract-labels, the fucntion 
+procceeds thorugh the text as usual, recieves instructions or labels from 
+the text.
+
+Access functions are added to regsim so that the test.scm can proceed to 
+simulate the gcd-machine;
+the function set-breakpoint, proceed-machine, cancel-breakpoint, and 
+cancel-all-breakpoints proceed to trigger the dispatch helper function in 
+the make-new-machine function tp invoke the execution of an instruction.
+
+ 
+===============================================================================

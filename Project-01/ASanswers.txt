@@ -1,0 +1,162 @@
+===============================================================================
+===============================================================================
+Exercise 1.11.  
+===============================================================================
+
+(define (fn-recursive n) 
+	(if ((< n 3) n ;;; n > 3
+		(+ 
+		(fn-recursive (- n 1)) ;;; f(n - 1)
+		(* 2 (fn-recursive (- n 1))) ;;; 2f (n - 2)
+		(* 3 (fn-recursive (- n 1))) ;;; 3f (n - 3)
+		)
+	))
+				
+The recursive procedure here was pretty much a straight up Scheme 
+impementation of the fucntion f(n) = n if n<3 and f(n) = f(n - 1) + 2f(n - 
+2) + 3f(n - 3) if n> 3 above due to the nature of Scheme/Lisp based on 
+recursion.
+
+
+(define (fn-iterative n)
+	(define (f-decrement fn fn-1 fn-2 counter)
+	(cond ((< counter 3) fn)
+       (else (f-decrement
+	   (+ fn (* 2 fn-1) (* 3 fn-2))
+		fn	fn-1 (- counter 1)))))
+	(cond ((< n 3) n)
+       (else (f-decrement 2 1 0 n))))
+
+The iterative procedure here takes values fn , fn-1, fn-2 , and a counter 
+value, within a function that iterates fn, it then becomes recalculated with 
+the former values of fn, fn-1 passed onto the new values fn-1, fn-2 as the 
+counter is decremented by 1. This is very much similiar to the (define fib n)
+procedure from 1.2.2 in SICP.
+
+Testing the recursive procedure in Scheme....
+==>(fn-recursive 0)
+0
+==>(fn-recursive 1)
+1
+==>(fn-recursive 2)
+2
+==>(fn-recursive 3)
+4
+==>(fn-recursive 4)
+11
+==>(fn-recursive 5)
+25
+==>(fn-recursive 6)
+59
+==>(fn-recursive 7)
+142
+==>(fn-recursive 8)
+335
+==>(fn-recursive 9)
+796
+==>(fn-recursive 10)
+1892
+
+
+	   Testing the iterative procedure in Scheme....
+==>(fn-iterative 0)
+0
+==>(fn-iterative 1)
+1
+==>(fn-iterative 2)
+2
+==>(fn-iterative 3)
+4
+==>(fn-iterative 4)
+11
+==>(fn-iterative 5)
+25
+==>(fn-iterative 6)
+59
+==>(fn-iterative 7)
+142
+==>(fn-iterative 8)
+335
+==>(fn-iterative 9)
+796
+==>(fn-iterative 10)
+1892
+
+It seems that both the recursive and iterative procedure seem to be similiar 
+in results...
+
+
+===============================================================================
+===============================================================================
+Exercise 1.12. 
+===============================================================================
+
+(define (triangle x y) 
+   (cond 
+        ((or (= y 0) (= y x)) 1)
+		((or (< x y) (< y 1)) 0)
+         (else 
+		 (+ (triangle (- x 1) (- y 1)) 
+            (triangle (- x 1) y )))
+	)) 			
+
+===============================================================================
+This recursive procedure takes an element from Pascal's triangle at which 
+row 'x' is indexed at 0, and column 'y' which is also indexed from left to 
+right. As the number of rows increases, it will take computing power to 
+compute the values due to recursion. So from here we can get a sense of how 
+computationally expensive tail-recursion is.
+
+==> (triangle 0 0)
+
+1
+==> (triangle 2 1)
+
+2
+==> (triangle 4 2)
+
+6
+
+===============================================================================
+===============================================================================
+
+Exercise 1.17.
+===============================================================================
+ (define (double x) (+ x x))
+ (define (halve x) (/ x 2))
+
+ (define (fast-multiply m n)
+	(cond 
+	((even? n) (double (fast-multiply m (halve n))))
+	(else (+ m (fast-multiply m (- n 1))))
+	((= n 1) m) ((= m 1) n)
+	((= n -1) (- m))((= m -1) (- n))
+	((or (= m 0)(= n 0)) 0)	
+	)
+)
+
+===============================================================================
+This is directly based on fast-expt from SICP, difference being in 
+fast-multiply is that add to double and multiplying versus fast-expt 
+squaring for recusion., the recursive method take log(n) time by dividing by 
+2 whether it is even and or subtract by 1 if odd which can eventually  lead 
+to divide by 2 afterwards time whereas an iterative method that would be (n) 
+time.  The recursive method maximizes the divide by 2 when going from any n 
+number to the base case of 1. Checking the base case m or n being 0 
+resulting in 0 to help avoid infinite recursion. Since multiplication is 
+communitive m and n are interchangable. 
+Testing........
+
+==> (fast-multiply 2 1)
+2
+==> (fast-multiply 1 2)
+2
+==> (fast-multiply 2 -1)
+-2
+==> (fast-multiply -1 2)
+-2
+==> (fast-multiply 0 1)
+0
+
+===============================================================================
+===============================================================================

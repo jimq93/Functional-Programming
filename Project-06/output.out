@@ -1,0 +1,226 @@
+Welcome to UMB Scheme, version 3.2  Copyright (c) 1988,1996 William R Campbell.
+UMB Scheme comes with ABSOLUTELY NO WARRANTY. This is free software and
+you are free to redistribute it under certain conditions.
+See the UMB Scheme Release Notes for details. Type Control-d to exit.
+
+Loading /home/offner/tools/lib/prelude.scheme...
+
+==> 
+divider
+==> Loading s450.scm...
+... loaded the metacircular evaluator. (s450) runs it.
+
+()
+==> 
+--------------------------------------------------------
+test if: <Special form: if>
+
+()
+==> 
+
+s450==> Special form: if
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test lambda: <right-lambda>
+
+()
+==> 
+
+s450==> right-lambda
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test that global environment doesn't get overwritten.
+()
+==> #t #t
+()
+==> 
+--------------------------------------------------------
+test defined?
+
+()
+==> 
+
+s450==> 3 3
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test locally-defined?:
+
+()
+==> 
+
+s450==> 3 3
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> #f #f
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test make-unbound!
+
+()
+==> 
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> #f #f
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test locally-make-unbound!
+
+()
+==> 
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> #t #t
+
+s450==> #f #f
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+install special form;
+    answer should be (called echo hello)
+
+()
+==> 
+
+s450==> (called echo hello)
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+test *plus*;
+    answers should be 3 6 0
+
+()
+==> 
+
+s450==> 3
+
+s450==> 6
+
+s450==> 0
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+install primitive procedure shout;
+    answer should be <( hooray . !)>
+
+()
+==> 
+
+s450==> (hooray . !)
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+redefine car;  answers should be as follows:
+     (primitive < primitive: car Pair >)
+     car
+     (user-defined-procedure (x) ((cdr x)) [procedure-env])
+     (right-newcar)
+
+()
+==> 
+
+s450==> (primitive < primitive: car Pair >)
+
+s450==> car
+
+s450==> (user-defined-procedure (x) ((cdr x)) <procedure-env>)
+
+s450==> (right-newcar)
+
+s450==> leaving s450
+
+==> 
+--------------------------------------------------------
+error -- reinstalling a special form:
+
+()
+==> 
+Error: NAME CONFLICT: if
+
+==> 
+--------------------------------------------------------
+error -- giving a defined name to a new special form:
+
+()
+==> 
+car
+==> 
+--------------------------------------------------------
+error -- defining a special form name:
+
+()
+==> 
+
+s450==> 
+Error: CANNOT REDEFINE SPECIAL FORM: if
+
+==> 
+==> 
+--------------------------------------------------------
+error -- installing a primitive procedure with the name of a special form:
+
+()
+==> 
+Error: SPECIAL FORM CANNOT BE PRIMITIVE: if
+
+==> 
+--------------------------------------------------------
+
+
+()
+==> 

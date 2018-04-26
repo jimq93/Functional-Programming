@@ -1,0 +1,75 @@
+===============================================================================
+===============================================================================
+NOTES ON HW7
+===============================================================================
+===============================================================================
+ Various Methods of Argument Passing 
+===============================================================================
+Part1.Delayed Arguments, Part2. Dynamic Arguments, Part3. Reference Arguments
+===============================================================================
+
+	For the streams, cons-stream is implemented by cons the thunk-exp of the 
+strm which is the cdr of car of the expression and made a thunk of the 
+cdr of the cdr of the car expression in the environment. stream-cdr is 
+the evaluation of the thunk expression of cdr of the value in the stream 
+in the thunk environment of the cdr of the stream. The other streams are 
+straight forward. The rest is installed by install-primitive-procedure, 
+with cons-stream by install-special-form.
+	Within the xeval function, within the else statement, will check for a 
+thunk? within the expression and evaluate it to the cdr of the car of 
+the expression with thunk-exp argument. A helper function known as 
+user-defined-values based on list-of-values will evaluate the operands 
+of the expression by first checking whether the operand is null? 
+otherwise it will check whether the parameters of the operand are 
+delayed? and make-thunk of the first operand of the environment, 
+dynamic? and evaluate the first operand in the dynamic-environment, 
+reference? and make reference of the first opeand in the environment; if 
+not then it will just proceed to evaluate the first operand in the 
+environment and proceed to the next parameter of the expression along 
+with the rest of the operands in the environment. 
+	xtend-environment is modified to extend the frame the dynamic 
+environment and not just the static environment by constructing a new 
+frame into the popped off dynamic environment.
+	xapply is modified with the use of a helper function called 
+basic-parameters similiar to list-of-values that checks for procedure 
+are null? then proceeds to check for whether the procedure values are 
+delayed? dynamic? or reference? and then thunk the expression of the 
+procedure, and then proceeds to the next procedure. A let statement	 
+is implemented to insure that the procedure is applied in order in the 
+eval-sequence in which the dynamic-frame will be returned after being 
+popped off after and evaluated by the eval-sequence. 
+	lookup-variable-value modified within it's cond statement checking for 
+equal? variable will check for a thunk? or a reference? of respective 
+value in the variable and will force the thunk when evaluating the 
+value, otherwise it wil just by default evaluate the car the value. 
+	set-variable-value modified within it's cond statement checking for 
+reference? of respective value in the variable and will recursively 
+invoke itself with the value of the thunked expression of the value, a 
+new value, and continue on to the next value of the expression of the 
+environment. 
+
+===============================================================================
+What about define-variable!? Do you need to make any changes to that 
+procedure? (Answer this question in notes.txt, as usual.)
+===============================================================================
+
+The define-variable! procedure needs no changes due how the value within a 
+variable will change due to how define works, and cond  are implemented in 
+checking for either reference? and thunk? of the car of the value in 
+lookup-variable-value and set-variable-value and evaluates the value of the 
+expression. 
+
+===============================================================================
+Part4: Continuations
+===============================================================================
+
+The placeholder error statment in s450 is replaced by a defined s450error 
+function that will invoke an error message due to wrong syntax , wrong input 
+expression. In the xeval function, a cond statement will check for an 
+eof-object? in the expression and jump to exit which will terminate the s450 
+interpreter after everything else is evaluated. Within (s450) loop, call/cc 
+is implemented to set quit to s450exit for the eof-object? condition, and 
+rest for the s450error function to supposedlty reset the interpreter. 
+
+===============================================================================
+===============================================================================

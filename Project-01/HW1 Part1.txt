@@ -1,0 +1,213 @@
+===============================================================================
+CS450 Homerwork 1 Part 1
+===============================================================================
+	I have messed around with the Scheme interpreter based on some 
+procedures in the sicp book especially in chapter 1, and played around 
+with the prompt to get a feeling of how the interpeter works. With the 
+prompt, I have to be more careful when writing large procedures, thus it 
+becomes more efficient to store the procedures in a .scm file and run it 
+though the interpreter from a stored file. Scheme feels alot like 
+programming functions into a calculator so far, due all the parentheses.
+	Scheme like Lisp is similiar to python where the arguments are 
+interpreted and evaluated. In a sense it is a form of dynamic 
+programming. Whereas language like Java (despite JVM), C, and C++,etc 
+are language that have to be compiled into machine code to be run. 
+Scheme seems a bit more flexible in user-defined functions where as 
+other languages you may run into alot more reserved words such as 
+Java,C++,etc. Scheme doesn't have pointers, so memory management isn't 
+something to look out for.
+===============================================================================
+===============================================================================
+1.Exercise 1.1. Below is a sequence of expressions. What is the result 
+printed by the interpreter in response to each expression? Assume that the 
+sequence is to be evaluated in the order in which it is presented. 
+===============================================================================
+==> 10 ;;; 10 is a constant
+10
+
+==>(+ 5 3 4) ;;; 5+3+4
+(+8 4)
+(12)
+12
+
+==>(- 9 1) ;;; 9-1
+(8)
+8
+
+==>(/ 6 2) ;;; 6/2
+(3)
+3
+
+==>(+ (* 2 4) (- 4 6)) ;;; (2*4)+(4-6)
+(+(8)(-2))
+(6)
+6
+
+==>(define a 3) ;;; a is assigned as 3
+(a)
+Answer = a
+
+==>(define b (+ a 1)) ;;; b is assigned as a+1
+(b)
+Answer = b
+
+==>(+ a b (* a b)) ;;; a+b+(a*b), a=3 b=3+1=4
+(+ 3 4(* 3 4))
+(+ 7 (12))
+(19)
+Answer = 19
+
+==>(= a b) ;;;a=3 b=4 3=/=4
+(= 3 4)
+Answer = #f
+
+==>(if (and (> b a) (< b (* a b))) 
+   b
+   a)			;;; (if((b>a)&&(b<(a*b))), then b otherwise a)
+(if (and (> 4 3) (< 4 (* 4 3)))
+	4
+	3)
+(if (and (#t) (< 4 (12)))
+	4
+	3)
+(if (and (#t) (#t))
+	4)
+(if (#t) 4)
+(4)
+Answer = 4
+
+==>(cond ((= a 4) 6)
+    ((= b 4) (+ 6 7 a))
+    (else 25))		;;; if((a=4) then 6)||((b=4) then (6+7+a))|| else 25, a=3
+(cond((= 3 4) 6)
+	((= 4 4) (+ 6 7 3))
+	(else 25))
+(cond((#f) 6)
+	((#t) (16))
+	(else 25)
+((#t) (16))
+(16)
+Answer = 16
+
+==>(+ 2 (if (> b a) b a)) ;;; 2+(if (b>a) then b otherwise a), b=4, a=3
+(+ 2 (if (> 4 3) 4 3))
+(+ 2 (if (#t) 4)
+(+ 2 (4))
+(6)
+Answer = 6
+
+==>(* (cond ((> a b) a)
+    	    ((< a b) b)
+            (else -1))
+      (+ a 1))
+		;;; (if (a>b) then a || if (a<b) then b || else return -1)*(a+1), 
+		;;;a=3, b=4
+
+(* (cond ((> 3 4) 3)
+	 ((< 3 4) 4)
+	 (else -1))
+      (+ 3 1))
+(* (cond ((#f) 3)
+	 ((#t) 4)
+	 (else -1))
+      (4))
+(* (4) (4))
+(16)
+Answer = 16
+===============================================================================
+===============================================================================
+2.Exercise 1.6. Alyssa P. Hacker doesn’t see why if needs to be provided as 
+a special form. ‘‘Why can’t I just define it as an ordinary procedure in 
+terms of cond?’’ she asks. Alyssa’s friend Eva Lu Ator claims this can 
+indeed be done, and she defines a new version of if:
+	(define (new-if predicate then-clause else-clause)
+	 (cond (predicate then-clause)
+ 		(else else-clause)))
+Eva demonstrates the program for Alyssa:
+
+	(new-if (= 2 3) 0 5)
+	5
+	(new-if (= 1 1) 0 5)
+	0
+
+Delighted, Alyssa uses new-if to rewrite the square-root program:
+	(define (sqrt-iter guess x)
+ 	(new-if (good-enough? guess x)
+ 	guess
+ 	(sqrt-iter (improve guess x)
+ 	x)))
+
+What happens when Alyssa attempts to use this to compute square roots? Explain. 
+===============================================================================	
+	The scheme interpreter evaluates procedures in an applicative-order, 
+thus operators/operands are prioritized first then the rest of the 
+procedure is applied. A user-defined function evaluates all arguments in 
+the beggining of the procedure. What will happen is that Alyssa’s new-if 
+statement will go into an infinite recursion if the (sqrt-iter (improve 
+guess x) x) is evaluated. This is due to sqrt-iter which is evaluated , 
+will which evaluate it's sqrt-iter due to recursion, which goes on 
+ad-nauseum. 
+===============================================================================
+===============================================================================
+3.(Call this Problem A on your paper, so I'll know which one it is.) Suppose 
+we have this code:
+    		(define (f x) (* x x))
+===============================================================================
+	1.What is this turned into internally when the Scheme interpreter reads 
+this definition? 	
+===============================================================================	
+		(define f lambda (x) (* x x))
+===============================================================================
+	2.Given this definition, and given the following expression
+     
+				(f (+ 3 5))
+===============================================================================
+	Show how this expression is evaluated using applicative-order evaluation.
+===============================================================================	
+				(f (+ 3 5))
+				((lambda (x) (* x x)) (+ 3 5))
+				((lambda (x) (* x x)) 8)
+				(* 8 8)
+				64
+===============================================================================
+	Show how this expression is evaluated using normal-order evaluation.
+===============================================================================	
+				(f (+3 5))
+				((lambda (x) (* x x)) (+ 3 5))
+				(* (+ 3 5) (+ 3 5))
+				(* 8 8)
+				64
+===============================================================================
+===============================================================================
+4.Exercise 1.5. Ben Bitdiddle has invented a test to determine whether the 
+interpreter he is faced with is using applicative-order evaluation or 
+normal-order evaluation. He defines the following two procedures:
+	(define (p) (p))
+	(define (test x y)
+ 	(if (= x 0)
+	 0
+	 y))
+Then he evaluates the expression
+	(test 0 (p))
+What behavior will Ben observe with an interpreter that uses 
+applicative-order evaluation? What behavior will he observe with an 
+interpreter that uses normal-order evaluation? Explain your answer. (Assume 
+that the evaluation rule for the special form if is the same whether the 
+interpreter is using normal or applicative order: The predicate expression 
+is evaluated first, and the result determines whether to evaluate the 
+consequent or the alternative expression.) 
+===============================================================================
+	What will happen here is that an infinite loop will occur if the scheme 
+interpreter uses an applicative-order evaluation. Applicative-order 
+evaluation evaluates everything from the beggining to the end. Simply 
+due to the nature of (define (p (p)) from the code above, will 
+indefinitely call itself if (test 0 (p)) is evaluated thus calling (p) 
+and get stuck in an infinite loop. 
+	For the normal-order evaluation part, the scheme interpreter will 
+evaluate everything at the end unless out of necessity which will 
+include checking the conditional statement before evaluating the (p) 
+function. This will result in '0' to be return from (test 0 (p)) since 
+will evaluate as true, in which 'p' will never execute to begin with. 	
+	
+===============================================================================
+===============================================================================

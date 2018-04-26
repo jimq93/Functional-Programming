@@ -1,0 +1,52 @@
+Welcome to UMB Scheme, version 3.2  Copyright (c) 1988,1996 William R Campbell.
+UMB Scheme comes with ABSOLUTELY NO WARRANTY. This is free software and
+you are free to redistribute it under certain conditions.
+See the UMB Scheme Release Notes for details. Type Control-d to exit.
+
+Loading /home/offner/tools/lib/prelude.scheme...
+
+==> Loading regsim.scm...
+
+--------------------------------------------------------
+Problem 5.8:  check for multiply defined label
+Error: Duplicate label -- EXTRACT LABELS
+
+==> 
+--------------------------------------------------------
+Problem 5.19:  breakpoints
+done
+==> 
+((test-b 4 4))
+==> Breakpoint: test-b, offset 4
+
+()
+==> 
+206
+==> Breakpoint: test-b, offset 4
+
+()
+==> 
+206
+==> 
+done
+==> 
+((test-b 1 1) (test-b 4 4))
+==> 
+((test-b 1 1))
+==> Breakpoint: test-b, offset 1
+
+()
+==> 
+40
+==> 
+done
+==> 
+2
+==> Loading regsim_5.9.scm...
+
+--------------------------------------------------------
+Problem 5.9: using a label as an operand to a built-in operation
+
+Error: can't operate on label -- MAKE-OPERATION-EXP(label start)
+
+==> 

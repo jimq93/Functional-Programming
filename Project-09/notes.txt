@@ -1,0 +1,204 @@
+===============================================================================
+===============================================================================
+===============================================================================
+NOTES ON HW9
+===============================================================================
+===============================================================================
+The Explicit-Control Evaluator :
+===============================================================================
+===============================================================================
+Exercise 5.24 (page 560). This exercise asks you to add support for the 
+special form cond. 
+===============================================================================
+
+Within ecevals-operations list, the following operations are added such as 
+cond?, null?, cond-clauses, cond-else-clause?, cond-predicate, and 
+cond-actions from syntax.scm. Within eval-dispatch function (test (op 
+cond?)....) is added to allow eceval to branch to the label ev-cond.
+
+For the main selector ev-cond, continue is saved to be evaluated in the 
+ev-sequence in the ev-cond-action selector. unev is assigned to evaluate the 
+sequences of clauses past cond. Ev-cond first checks if the operator is 
+empty of clauses, if so ev-cond jumps to ev-cond-continue; from there is 
+just returns the empty list, and restores the continue and procced to 
+continue on. Otherwise ev-cond continues to take the first clause in the 
+expression and saves the expression.  Next ev-cond checks for the else 
+clause, and branches to ev-cond-action in which it will take off another 
+clause by one, then it proceeds onto to ev-sequence of which the evaluation 
+of continue is done at this point. continue is then passed onto 
+ev-cond-decide (based off of ev-if-decide) which will get the expression and 
+unev and check if the predicate is true. If so it will then branch to 
+ev-cond-action to evaluate the expression and take off another clause, then 
+proceeds to loop until there are no more clauses.
+
+
+Testing:
+
+;;; EC-Eval input:
+(define (make-register)
+  (let ((contents '*unassigned*))
+    (define (dispatch message)
+      (cond ((equal? message 'get) contents)
+            ((equal? message 'set)
+             (lambda (value) (set! contents value)))
+            (else
+             (error "Unknown request -- REGISTER " message))))
+    dispatch))
+
+(total-pushes = 3 maximum-depth = 3)
+
+;;; EC-Eval value:
+ok
+
+
+===============================================================================
+Exercise 5.26 (page 564). For clarity, call this function (which the book 
+calls factorial) fact-i (the "i" for "iterative"). Be sure to answer the 
+questions in parts a and b.
+Note that this exercise does not involve writing any code. You just have to 
+experiment with the machine.
+===============================================================================
+;;; EC-Eval input: (factorial 0)
+(total-pushes = 29 maximum-depth = 8)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 1)
+(total-pushes = 64 maximum-depth = 10)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input:(factorial 2)
+(total-pushes = 99 maximum-depth = 10)
+;;; EC-Eval value: 2
+
+;;; EC-Eval input: (factorial 3)
+(total-pushes = 134 maximum-depth = 10)
+;;; EC-Eval value: 6
+
+;;; EC-Eval input: (factorial 4)
+(total-pushes = 169 maximum-depth = 10)
+;;; EC-Eval value: 24
+
+;;; EC-Eval input: (factorial 5)
+(total-pushes = 204 maximum-depth = 10)
+;;; EC-Eval value: 120
+
+a. That maximum depth required to evaluate n! is 10 as indicated from above 
+experiment.
+
+b. Going from the sequence of intervals above seems to be by 35 apart, 
+starting with a constant of 29 from the initial factorial of 0.
+Thus the formula 35n + 29 can be extrapolated from 29, 64, 99, 134, 169, 
+204....
+
+===============================================================================
+Exercise 5.27 (page 564). For clarity, call this function (which the book 
+also calls factorial) fact-r (the "r" for "recursive").
+Like the last exercise, this exercise does not involve writing any code. In 
+both exercises, you should collect data at least for values of n from 1 
+through 5.
+===============================================================================
+;;; EC-Eval input: (factorial 0)
+(total-pushes = -16 maximum-depth = 3)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 1)
+(total-pushes = 16 maximum-depth = 8)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 2)
+(total-pushes = 48 maximum-depth = 13)
+;;; EC-Eval value: 2
+
+;;; EC-Eval input: (factorial 3)
+(total-pushes = 80 maximum-depth = 18)
+;;; EC-Eval value: 6
+
+;;; EC-Eval input: (factorial 4)
+(total-pushes = 112 maximum-depth = 23)
+;;; EC-Eval value:24
+
+;;; EC-Eval input: (factorial 5)
+(total-pushes = 144 maximum-depth = 28)
+;;; EC-Eval value: 120
+
+a.From the data above and in 5.26, the maximum depth seems to iterate by 
+5 with a constant of 3, from 3,8,13,18,23,28........
+we can the extrapolate the formula being 5n+3.
+
+b.Also from above we can etrapolate from -16,16,48,80,112,144,..... means the 
+factorial is pushing by 32 with a constant of -16, 
+thus the formula being 32n-16.
+ 
+===============================================================================
+Exercise 5.28 (page 565). This requires changing some of the code in 
+eceval.scm, but the book shows you exactly what to do. Add the code anywhere 
+you want, just so long as it won't be "fallen into", and just leave the 
+label ev-sequence for the new code commented out. Then to try the new code 
+for this exercise, comment out the old label ev-sequence and uncomment the 
+new one. 
+===============================================================================
+Iterative:
+
+;;; EC-Eval input: (factorial 0)
+(total-pushes = 33 maximum-depth = 14)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 1)
+(total-pushes = 70 maximum-depth = 17)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 2)
+(total-pushes = 107 maximum-depth = 20)
+;;; EC-Eval value: 2
+
+;;; EC-Eval input: (factorial 3)
+(total-pushes = 144 maximum-depth = 23)
+;;; EC-Eval value: 6
+
+;;; EC-Eval input: (factorial 4)
+(total-pushes = 181 maximum-depth = 26)
+;;; EC-Eval value: 24
+
+;;; EC-Eval input: (factorial 5)
+(total-pushes = 218 maximum-depth = 29)
+;;; EC-Eval value: 120
+
+Going from the above data with the pushes of 33,70,107,144,181,218..., 
+and with maximum-depth of 14,17,20,23,26,29..........
+We can extrapolate the formula of pushes being 37n+33, and the maximum-depth 
+being 3n+14.
+
+
+Recursive:
+
+;;; EC-Eval input: (factorial 0)
+(total-pushes = -16 maximum-depth = 3)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 1)
+(total-pushes = 18 maximum-depth = 11)
+;;; EC-Eval value: 1
+
+;;; EC-Eval input: (factorial 2)
+(total-pushes = 52 maximum-depth = 19)
+;;; EC-Eval value: 2
+
+;;; EC-Eval input: (factorial 3)
+(total-pushes = 86 maximum-depth = 27)
+;;; EC-Eval value: 6
+
+;;; EC-Eval input: (factorial 4)
+(total-pushes = 120 maximum-depth = 35)
+;;; EC-Eval value: 24
+
+;;; EC-Eval input: (factorial 5)
+(total-pushes = 154 maximum-depth = 43)
+;;; EC-Eval value: 120
+
+Going from the above data with the pushes of -16,18,52,86,120,154..., 
+and with maximum-depth of 3,11,19,27,35,43..........
+We can extrapolate the formula of pushes being 34n-16, and the maximum-depth 
+being 8n+3.
+ 
+===============================================================================
+===============================================================================

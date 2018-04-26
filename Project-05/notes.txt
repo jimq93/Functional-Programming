@@ -1,0 +1,89 @@
+===============================================================================
+===============================================================================
+===============================================================================
+NOTES ON HW5
+===============================================================================
+===============================================================================
+1.
+ Define a function
+ (display-n stream n)
+ that prints the first n elements of stream, each on a separate line.
+===============================================================================
+	The nextstream serves as a helper function to simply display the n 
+elements in stream with newline. The stream will go into a foreach by 
+stream-foreach (provided by Chapter 3 of SICP) which will check for 
+empty streams but proceed to go through a stream of n elements that is 
+filtered by provided stream-filter that will cons through the stream 
+recursively of elements greater than 0, outputting basically positive 
+integers. The recursive means is rather computationally intensive.
+===============================================================================
+2.
+===============================================================================
+2.1.
+What is the purpose of the apply and the cons in the last two lines of the 
+procedure? Why could you not just leave them out and replace the last two 
+lines by the line
+
+(stream-map proc (map <??>
+       argstreams))))
+2.2.
+What about replacing the last two lines by this: 
+ (apply stream-map proc (map <??>
+       argstreams))))
+
+===============================================================================
+	The purpose of apply in Scheme is to take a set of elements in a list as 
+arguments to be evaluated in a procedure. With the case of stream-map 
+which returns a list, apply will apply the list of list of arguments 
+into the procedure. In the case of '(stream-map proc (map <??> 
+argstreams))))' won't work due to each element within the list is it's 
+own argument in a set of arguments, which the list is then constructed. 
+apply can also evaluate greater than 4 elements for an infintie stream 
+in a list as car and cdr is limited to 4The purpose of cons in the case 
+of stream-map is that it can accept more arguments than apply alone 
+which only accepts 2 arguements which is why in the case of '(apply 
+stream-map proc (map <??> argstreams))))' solely wouldn't work. 
+===============================================================================
+3.
+===============================================================================	
+	In this case the stream-filter will go through all the list of elements 
+in the stream and check for numbers that aren't divisible by 2 ,3 ,5. 
+First it will check for 2, 3 , and 5 while it is greater than zero 0 due 
+ot the integer being a positive strema of integers. 
+===============================================================================	
+4.
+Exercise 3.53 in the text.
+
+Without running the program, describe the elements of the stream defined by
+(define s (cons-stream 1 (add-streams s s)))
+
+===============================================================================	
+
+The elements in the stream defined above seems to be a stream that doubles 
+its consecutive elements by the '(add-streams s s)' which adds the same 
+number or doubles it, in this case the starting the number is 1 and is 
+doubled by redefining itself as the doubled number . 
+
+for example 1, 2 ,4 ,8 ,16...........
+===============================================================================	
+5.
+Exercise 3.54 in the text. 
+===============================================================================	
+	
+	The factorial will be multiplied with the integers which both serve as 
+input in the stream in order to iterate the stream n+1. Much like how 
+add-streams adds this stream with that stream into the map of the 
+stream; mul-stream will multiply this stream with that stream into the 
+map of the stream. 
+
+===============================================================================	
+6.
+Exercise 3.55 in the text. 
+===============================================================================	
+	This problem involves streams that add the sums n+1 streams and adds 
+upon itself. So for the procedure will have to go about adding one 
+stream with another stream, add-streams acts as a helper function. 
+add-streams provided from section 3.5 of SICP will add the sums with sum 
+of n+1 of the previous partial-sums and be returned as the new sums. 
+
+===============================================================================

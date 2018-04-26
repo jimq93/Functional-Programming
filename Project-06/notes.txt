@@ -1,0 +1,220 @@
+===============================================================================
+===============================================================================
+NOTES ON HW6
+===============================================================================
+===============================================================================
+1.
+ (You should have already done this.) Play with the s450 evaluator: 
+ 
+ .....
+
+ See how much of real Scheme is there. Write (in notes.txt) about what you 
+found.
+===============================================================================
+	
+	I did play around with the originally provided s450.scm. I played around 
+by typing in simple functions such as cons to construct a simple list.
+
+s450==>(cons 1 '())
+ (1)
+ 
+with car and cdr to acess a simple list of elements for instance. 
+
+
+s450==> (car '(1 2 3))
+(1)
+
+
+s450==> (cdr '(1 2 3))
+(2 3)
+
+
+null? exist to check the empty list. 
+
+s450==> (null? 0)
+#f
+
+All of this simple enough work with lists within this provided Scheme 
+interpreter. Typing in an undefined variable or a slight mistype easily 
+causes the program to stop.
+
+s450==> x
+
+Error: Unbound variable x
+
+Reset (Use Control-d to quit UMB Scheme)
+
+===============================================================================
+2.
+
+Rewrite xeval so that the handling of special forms is data directed. (This 
+is Exercise 4.3 on page 374.)
+
+===============================================================================
+	
+	For xeval in special forms, a 1d lookup table known as xeval-rules is 
+implemented to hold a list of special forms such as 'quote', 'set', 
+'define', 'if', 'lambda', 'begin', and 'cond' instead of embedding them 
+into xeval which will make it less cumbersome. 
+
+	The locally defined function action will be assigned by the function 
+look-up action as recommended by the pseudocode with a helper function 
+type-of which will help evaluate the type of expression. type-of will 
+check the first expression in the list as a pair and evaluate it, 
+otherwise an empty list is returned. lookup-action uses a 1d lookup 
+table xeval-rules to check for the type-of expression in the pair to 
+return the next pair or otherwise return as false. lookup-action with 
+type-of will work in conjunction to search through a pair of expression 
+for xeval, for the helper function action. 
+
+	Within the xeval function, action will be invoked, followed by a nested 
+cond and else conditions; The first nested cond statement will check in 
+make-procedure for lambda expresions, going through the parameters of 
+the lambda expresions, the body of the expression of the list in the 
+enviroment. Otherwise action is invoked to check the expression for 
+cond?, and begin? and invoke it's respective expresions as those two 
+alters the expression when passed on, with a initial expression returned 
+as default in the enviroment.  
+
+	For the nested else clause was the initially provided invokes the 
+initally provided cond statement that is nested into the else clause.  
+It checks whether the expression is self-evaluating, an variable, or an 
+application and evaluate the expression respectively, otherise an error 
+is invoked.  
+ 
+===============================================================================
+3.
+In s450 now, entering the name of a special form at the prompt causes a 
+crash. Fix things so that instead a message is generated, like this: 
+
+s450==> if
+        Special form:  if
+===============================================================================	
+	
+	For the nested else clause as described above, within variable? 
+condition contains a nested cond statement to check the expression with 
+lookup-action in the 1d look-up table xeval-rules to check the 
+expression if it is a special form, and return a message indicating the 
+expression is a special form to prevent a crash. Otherwise it by 
+defaults to checking the expression for variables in the enviroment.
+	
+===============================================================================	
+4.
+Fix things so that the name of a special form cannot be redefined or 
+assigned to. That is, we should not be able to get away with typing 
+
+ s450==> (define if 3)
+or 
+        s450==> (set! if 3)
+
+===============================================================================	
+
+To avoid any issues that may arise from changing special forms, simply 
+modifying the initial eval-definition, and eval-assignment code to have a 
+condition to lookup specific names within the lookup table xeval-rules of 
+special forms so that, so that an error will intervene and will throw up a 
+if one tries to redefine or reassign the special forms in place. 
+
+===============================================================================	
+5.
+Write and install the following new special forms: 
+
+Exercise 4.13
+===============================================================================	
+	
+Various helper functions are defined such as frames, var-names, var-frames, 
+val-frames which serve to help the special forms go into a list of 
+epxressions. 	
+
+The helper function val-remove is based off my hw2 remove-val that is used 
+by both the make-unbound! and locally-make-unbound! special forms to remove 
+a variable name from the variable frames or the enviroment frame by 
+filtering through the sequence in a list.
+
+The helper function scanning, goes through the list of values, checking 
+whether the variable frame is empty and returning as an empty list if a 
+varaible is not in the environment. Following through the list to check 
+whether the first variable is in the enviroment, thus skipping the first 
+values. Otherwise it will just scan through the subsequent list of 
+values/variables in the enviroment. 
+
+For the special form defined?, it will initially check if the enviroment is 
+empty to return as false, next it will check if the expression is 
+locally-defined in the enviroment, otherwise it will go onto to check the 
+next expression that maybe defiend in the enviroment. 
+
+For the special form locally-defined will check if the first frame is in 
+the enviroment to return true, otherwise it is false. 
+
+For the special form make-unbound will check if the enviroment is empty the 
+enviroment to return false, otherwise it will begin creating local helper 
+expresions such as varnames based on var-names, framed based on frames, 
+varframes based on var-frames, valframes based on val-frames to insure no 
+conflicting expressions by the interpreter. It will then go through the 
+enviroment and remove the binding from the variable frame, it will then 
+scan through the next variables in the enviroment, and returned the variable 
+name. After that it repeats it self with the next frame in the enviroment. 
+
+For the special form locally-make-unbound!, it similiar to make-unbound 
+except that it simply just  goes through the enviroment and remove the 
+binding from the first variable frame, it will then scan through the next 
+variables in the enviroment, and returned the first variable name.
+
+The respective special forms are installed with (install-special-form <name> 
+<action>) to implement them into the global enviroment.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+==> (s450)
+
+s450==> (define f
+      (lambda (a b)
+        (display (locally-defined? a))
+        (display (locally-defined? b))
+        (locally-make-unbound! a)
+        (locally-make-unbound! b)
+        (display (locally-defined? a))
+        (display (locally-defined? b))
+        )
+      )
+f
+
+s450==> (f 3 4)
+#t#t#f#f()
+
+s450==>
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+
+By executing (f 3 4) in the s450 above returns a true, true, and false, 
+false afterwards as a result of locally-make-unbound function removing the 
+binding from the first frame. In this case the variables are initially 
+defined as "true", but are removed thus resulting in false. 
+
+===============================================================================	
+6.
+Clean up the way primitive procedures are installed in s450: write a 
+procedure install-primitive-procedure that can be called like this: 
+
+(install-primitive-procedure <name>  <action>)
+
+For instance, 
+         (install-primitive-procedure 'car car)
+
+===============================================================================	
+	
+For the function install-primitive-procedure goes through a list of 
+expressions initially does a checkup for the inputed name in special form, 
+then it begins to add the inpuuted name of the primitive, it's list of 
+paranthesized expressions that includes it's name, and it's action and binds 
+the first frame into the global enviroment. Then the name of the primitive 
+procedure is returned.
+ 
+Due to this implementation of install-primitive-procedure, the variables 
+primitive-procedures, primitive-procedure-names, primitive-procedure-objects 
+are removed as they are no longer needed. Likewise the respective variables 
+primitive-procedure-names, and primitive-procedure-objects are replaced to 
+return the-empty-enviroment in the initial startup of the setup enviroment 
+of the interpreter. The respective primitive functions and more that were 
+added originally to the primitive-procedures are included through 
+(install-primitive-procedure <name> <action>) respectively into the global 
+enviroment. 
+
+===============================================================================
